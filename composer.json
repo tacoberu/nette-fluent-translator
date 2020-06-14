@@ -23,16 +23,13 @@
 	],
 	"require": {
 		"php" : ">=5.3.3",
-		"tacoberu/fluent-intl": "dev-master",
+		"tacoberu/fluent-intl": "~1.0",
 		"nette/utils": ">=2"
 	},
     "require-dev": {
 		"phpunit/phpunit": "~4.0",
         "tracy/tracy": "^2.0"
     },
-	"repositories": [
-		{ "type": "vcs", "url": "git://github.com/tacoberu/fluent-php"}
-	],
 	"autoload": {
 		"classmap": ["libs"]
 	}

@@ -1,25 +1,50 @@
 <?php
+/**
+ * Copyright (c) since 2004 Martin Takáč
+ * @author Martin Takáč <martin@takac.name>
+ */
 
 namespace Taco\NetteFluentTranslator;
 
-use Taco\FluentIntl\FluentTranslator;
+use Nette\Localization\ITranslator;
 
 
-class Translator implements Nette\Localization\ITranslator
+class Translator implements ITranslator
 {
-	private $provider;
+	private $catalog;
+	private $loader;
+	private $localeResolver;
+	private $default;
+	private $supported;
 
-	function __construct(FluentTranslator $provider)
+	function __construct(LocaleResolver $localeResolver, MessageLoader $loader, $default, array $supported)
 	{
-		$this->provider = $provider;
+		$this->loader = $loader;
+		$this->localeResolver = $localeResolver;
+		$this->default = $default;
+		$this->supported = $supported;
 	}
 
 
 
-	function translate($id, array $args = [])
+	function translate($id, $args = Null)
 	{
-		$msg = $this->provider->getMessage($id);
-		list($msg, $_) = $this->provider->formatPattern($msg->value, $args);
+		if (empty($args)) {
+			$args = [];
+		}
+		$catalog = $this->getCatalog();
+		$msg = $catalog->getMessage($id);
+		list($msg, $_) = $catalog->formatPattern($msg->value, $args);
 		return $msg;
+	}
+
+
+
+	private function getCatalog()
+	{
+		if (empty($this->catalog)) {
+			$this->catalog = $this->loader->loadFor($this->localeResolver->resolve($this->supported, $this->default));
+		}
+		return $this->catalog;
 	}
 }
