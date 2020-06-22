@@ -33,9 +33,10 @@ class Translator implements ITranslator
 			$args = [];
 		}
 		$catalog = $this->getCatalog();
-		$msg = $catalog->getMessage($id);
-		list($msg, $_) = $catalog->formatPattern($msg->value, $args);
-		return $msg;
+		if ($msg = $catalog->getMessage($id)) {
+			list($msg, $_) = $catalog->formatPattern($msg->value, $args);
+		}
+		return $msg ?: $id;
 	}
 
 

@@ -57,10 +57,10 @@ class Extension extends Nette\DI\CompilerExtension
 	private static function assertReadable($path, $label)
 	{
 		if ( ! file_exists($path)) {
-			throw new LogicException("Path '{$label}' is not found.");
+			throw new LogicException("Path $label: '{$path}' is not found.");
 		}
 		if ( ! is_readable($path)) {
-			throw new LogicException("Path '{$label}' is not readable.");
+			throw new LogicException("Path $label: '{$path}' is not readable.");
 		}
 	}
 }
