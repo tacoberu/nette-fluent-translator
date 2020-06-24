@@ -11,6 +11,13 @@ use LogicException;
 
 
 /**
+ * extensions:
+ *     translation: Taco\NetteFluentTranslator\Extension(%appDir%/locales)
+ * translation:
+ *     defaultLocale: cs_CZ
+ *     supportedLocales:
+ *         - cs_CZ
+ *
  * @author Martin Takáč <martin@takac.name>
  */
 class Extension extends Nette\DI\CompilerExtension
@@ -20,8 +27,8 @@ class Extension extends Nette\DI\CompilerExtension
 	 * @var array
 	 */
 	private $default = [
-		'defaultLocale' => 'cs_CZ',
-		'supportedLocales' => ['cs_CZ', 'en_GB'],
+		//~ 'defaultLocale' => 'cs_CZ',
+		//~ 'supportedLocales' => ['cs_CZ', 'en_GB'],
 	];
 
 
