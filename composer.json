@@ -23,7 +23,7 @@
 	],
 	"require": {
 		"php" : ">=5.3.3",
-		"tacoberu/fluent-intl": "~1.0",
+		"tacoberu/fluent-intl": "~1.2",
 		"nette/utils": ">=2"
 	},
     "require-dev": {

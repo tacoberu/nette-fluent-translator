@@ -32,14 +32,24 @@ class Extension extends Nette\DI\CompilerExtension
 	];
 
 
-	/** @var string */
+	/**
+	 * Umístění souborů <locale>/*.flt
+	 * @var string
+	 */
 	private $dataDir;
 
 
-	function __construct($dataDir)
+	/**
+	 * @var FluentFormaterResolver
+	 */
+	private $formatersResolver;
+
+
+	function __construct($dataDir, $formatersResolver = Null)
 	{
 		self::assertReadable($dataDir, 'dataDir');
 		$this->dataDir = $dataDir;
+		$this->formatersResolver = $formatersResolver;
 	}
 
 
@@ -54,7 +64,7 @@ class Extension extends Nette\DI\CompilerExtension
 		$builder->addDefinition($this->prefix('localeResolver'))
 			->setFactory(LocaleResolver::class);
 		$builder->addDefinition($this->prefix('loader'))
-			->setFactory(MessageLoader::class, [$this->dataDir]);
+			->setFactory(MessageLoader::class, [$this->dataDir, $this->formatersResolver]);
 		$builder->addDefinition($this->prefix('translator'))
 			->setFactory(Translator::class, [$this->prefix('@localeResolver'), $this->prefix('@loader'), $config['defaultLocale'], $config['supportedLocales']]);
 	}

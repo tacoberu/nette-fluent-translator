@@ -16,11 +16,13 @@ class MessageLoader
 
 
 	private $baseDir;
+	private $formatersResolver;
 
 
-	function __construct($baseDir)
+	function __construct($baseDir, $formatersResolver)
 	{
 		$this->baseDir = $baseDir;
+		$this->formatersResolver = $formatersResolver;
 	}
 
 
@@ -34,7 +36,7 @@ class MessageLoader
 		if ( ! file_exists($filename)) {
 			throw new \LogicException("Localization file source '{$filename}' is not found.");
 		}
-		$bundle = new FluentTranslator(strtr($locale, '_', '-'));
+		$bundle = new FluentTranslator(strtr($locale, '_', '-'), $this->formatersResolver);
 		$bundle->addResource(new FluentResource(file_get_contents($filename)));
 		return $bundle;
 	}
