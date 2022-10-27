@@ -22,9 +22,9 @@
 		"nette"
 	],
 	"require": {
-		"php" : ">=5.3.3",
+		"php" : ">=7.4",
 		"tacoberu/fluent-intl": "~1.2",
-		"nette/utils": ">=2"
+		"nette/utils": ">=3"
 	},
     "require-dev": {
 		"phpunit/phpunit": "~4.0",

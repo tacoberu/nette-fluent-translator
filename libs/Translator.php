@@ -27,7 +27,7 @@ class Translator implements ITranslator
 
 
 
-	function translate($id, $args = Null)
+	function translate($id, ...$args) : string
 	{
 		if (empty($args)) {
 			$args = [];
