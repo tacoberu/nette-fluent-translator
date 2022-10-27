@@ -24,7 +24,7 @@ class Extension extends Nette\DI\CompilerExtension
 {
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	private $default = [
 		//~ 'defaultLocale' => 'cs_CZ',
