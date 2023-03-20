@@ -7,6 +7,9 @@
 namespace Taco\NetteFluentTranslator;
 
 use Nette;
+use Nette\Bridges\ApplicationLatte\ILatteFactory;
+use Nette\Localization\ITranslator;
+use Latte;
 use LogicException;
 
 
@@ -26,9 +29,10 @@ class Extension extends Nette\DI\CompilerExtension
 	/**
 	 * @var array
 	 */
-	private $default = [
-		//~ 'defaultLocale' => 'cs_CZ',
-		//~ 'supportedLocales' => ['cs_CZ', 'en_GB'],
+	private $defaults = [
+		'defaultLocale' => 'cs_CZ',
+		'supportedLocales' => [],
+		'injectToLatte' => false,
 	];
 
 
@@ -56,8 +60,8 @@ class Extension extends Nette\DI\CompilerExtension
 
 	function loadConfiguration()
 	{
-		$config = $this->getConfig($this->default);
-		$config['supportedLocales'] = array_unique($config['supportedLocales']);
+		$this->validateConfig($this->defaults);
+		$this->config = (object) $this->config;
 
 		$builder = $this->getContainerBuilder();
 
@@ -66,7 +70,33 @@ class Extension extends Nette\DI\CompilerExtension
 		$builder->addDefinition($this->prefix('loader'))
 			->setFactory(MessageLoader::class, [$this->dataDir, $this->formatersResolver]);
 		$builder->addDefinition($this->prefix('translator'))
-			->setFactory(Translator::class, [$this->prefix('@localeResolver'), $this->prefix('@loader'), $config['defaultLocale'], $config['supportedLocales']]);
+			->setFactory(Translator::class, [$this->prefix('@localeResolver'), $this->prefix('@loader'), $this->config->defaultLocale, array_unique($this->config->supportedLocales)]);
+	}
+
+
+
+	/**
+	 * Translator přidáme do Latte
+	 */
+	function beforeCompile()
+	{
+		if ($this->config->injectToLatte) {
+			$builder = $this->getContainerBuilder();
+
+			$translator = $builder->getDefinitionByType(ITranslator::class);
+
+			$latteFactory = $builder->getDefinitionByType(ILatteFactory::class);
+			if (version_compare(Latte\Engine::VERSION, '3', '<')) {
+				$latteFactory->getResultDefinition()
+					->addSetup('?->addFilter(?, function(Latte\Runtime\FilterInfo $fi, ...$args) {
+						return ?->translate(...$args);
+					})', ['@self', 'translate', $translator]);
+			}
+			else {
+				throw new \LogicException('comming soon...');
+				//~ $this->latte->addExtension(new Latte\Essential\TranslatorExtension($translator, $language));
+			}
+		}
 	}
 
 
