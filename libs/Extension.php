@@ -9,6 +9,7 @@ namespace Taco\NetteFluentTranslator;
 use Nette;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\Localization\ITranslator;
+use Nette\Schema\Expect;
 use Latte;
 use LogicException;
 
@@ -25,16 +26,6 @@ use LogicException;
  */
 class Extension extends Nette\DI\CompilerExtension
 {
-
-	/**
-	 * @var array
-	 */
-	private $defaults = [
-		'defaultLocale' => 'cs_CZ',
-		'supportedLocales' => [],
-		'injectToLatte' => false,
-	];
-
 
 	/**
 	 * Umístění souborů <locale>/*.flt
@@ -58,11 +49,19 @@ class Extension extends Nette\DI\CompilerExtension
 
 
 
+	function getConfigSchema(): Nette\Schema\Schema
+	{
+		return Expect::structure([
+			'defaultLocale' => Expect::string(),
+			'supportedLocales' => Expect::listOf('string'),
+			'injectToLatte' => Expect::bool()->default(false),
+		]);
+	}
+
+
+
 	function loadConfiguration()
 	{
-		$this->validateConfig($this->defaults);
-		$this->config = (object) $this->config;
-
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('localeResolver'))
